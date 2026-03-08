@@ -6,8 +6,6 @@ from the OpenSky Network and exposes it through a clean HTTP interface.
 Built to demonstrate: C++ OOP design, RESTful API consumption and
 production, Service-Oriented Architecture, and CMake-based DevOps.
 
-## Live Demo
-https://flight-data-service.onrender.com/api/flights/stats
 
 ## Architecture
 
