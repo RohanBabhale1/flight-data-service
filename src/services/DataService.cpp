@@ -5,27 +5,18 @@
 #include <sstream>
 #include <ctime>
 #include <stdexcept>
+#include <iomanip>
 
 namespace FlightDS {
 
 DataService::DataService()
-    : apiClient(std::make_unique<APIClient>(
-          "https://" + 
-          std::string(getenv("OPENSKY_USER") ? getenv("OPENSKY_USER") : "") +
-          ":" +
-          std::string(getenv("OPENSKY_PASS") ? getenv("OPENSKY_PASS") : "") +
-          "@opensky-network.org")),
+    : apiClient(std::make_unique<APIClient>("https://opensky-network.org")),
       lastFetchTime(0), cacheDurationSeconds(30) {
     initializeAirports();
 }
 
 DataService::DataService(int cacheDuration)
-    : apiClient(std::make_unique<APIClient>(
-          "https://" + 
-          std::string(getenv("OPENSKY_USER") ? getenv("OPENSKY_USER") : "") +
-          ":" +
-          std::string(getenv("OPENSKY_PASS") ? getenv("OPENSKY_PASS") : "") +
-          "@opensky-network.org")),
+    : apiClient(std::make_unique<APIClient>("https://opensky-network.org")),
       lastFetchTime(0), cacheDurationSeconds(cacheDuration) {
     initializeAirports();
 }
