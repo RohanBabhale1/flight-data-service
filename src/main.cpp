@@ -4,47 +4,54 @@
 #include <csignal>
 #include "server/RestServer.h"
 #include "services/DataService.h"
- 
-using namespace std;
+
 using namespace FlightDS;
- 
-unique_ptr<RestServer> g_server;
- 
+
+// Global server pointer for signal handling
+std::unique_ptr<RestServer> g_server;
+
+// Handle Ctrl+C graceful shutdown
 void signalHandler(int signal) {
     if (signal == SIGINT || signal == SIGTERM) {
-        cout << "\n[Main] Shutting down gracefully...\n";
+        std::cout << "\n[Main] Shutting down gracefully...\n";
         if (g_server) g_server->stop();
         exit(0);
     }
 }
- 
+
 int main(int argc, char* argv[]) {
+    // Register signal handlers
     signal(SIGINT, signalHandler);
     signal(SIGTERM, signalHandler);
- 
+
+    // Parse port from command line argument
     int port = 8080;
     if (argc > 1) {
         try {
-            port = stoi(argv[1]);
+            port = std::stoi(argv[1]);
             if (port < 1024 || port > 65535) {
-                cerr << "[Main] Invalid port. Using 8080.\n";
+                std::cerr << "[Main] Invalid port. Using 8080.\n";
                 port = 8080;
             }
         } catch (...) {
-            cerr << "[Main] Invalid port argument. Using 8080.\n";
+            std::cerr << "[Main] Invalid port argument. Using 8080.\n";
         }
     }
- 
-    cout << "[Main] Initializing Flight Data Service...\n";
- 
+
+    std::cout << "[Main] Initializing Flight Data Service...\n";
+
     try {
-        auto dataService = make_shared<DataService>(60);
-        g_server = make_unique<RestServer>(dataService, port);
+        // Create DataService with 60-second cache
+        auto dataService = std::make_shared<DataService>(60);
+
+        // Create and start REST server
+        g_server = std::make_unique<RestServer>(dataService, port);
         g_server->start();
-    } catch (const exception& e) {
-        cerr << "[Main] Fatal error: " << e.what() << "\n";
+
+    } catch (const std::exception& e) {
+        std::cerr << "[Main] Fatal error: " << e.what() << "\n";
         return 1;
     }
- 
+
     return 0;
 }
