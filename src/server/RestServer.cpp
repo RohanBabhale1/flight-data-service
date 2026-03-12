@@ -34,11 +34,14 @@ std::string RestServer::wrapResponse(const std::string& data,
 // Register all routes
 void RestServer::setupRoutes() {
 
+    server.set_mount_point("/", "./static");
+
     // GET /health — server health check
     server.Get("/health", [this](const httplib::Request& req,
                                   httplib::Response& res) {
         handleHealth(req, res);
     });
+
 
     // GET /api/flights — all live flights
     server.Get("/api/flights", [this](const httplib::Request& req,
