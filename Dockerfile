@@ -18,7 +18,12 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
+
+# Copy binary
 COPY --from=builder /app/build/flight_service .
+
+# Copy static UI
+COPY --from=builder /app/static ./static
 
 EXPOSE 8080
 
